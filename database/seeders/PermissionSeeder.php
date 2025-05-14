@@ -9,12 +9,12 @@ class PermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        \$perms = ['list users','edit users','delete users','list roles','edit roles'];
-        foreach (\$perms as \$p) {
-        Permission::firstOrCreate(['name' => \$p]);
+        $perms = ['list users','edit users','delete users','list roles','edit roles'];
+        foreach ($perms as $p) {
+        Permission::firstOrCreate(['name' => $p]);
         }
-        \$admin = Role::firstOrCreate(['name' => 'admin']);
-        \$admin->syncPermissions(\$perms);
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $admin->syncPermissions($perms);
         Role::firstOrCreate(['name' => 'user'])->givePermissionTo('list users');
     }
 }
