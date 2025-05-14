@@ -26,8 +26,28 @@ return [
     // You can make sure all your URLs use this prefix by using the backpack_url() helper instead of url()
     //'route_prefix' => 'admin',
     'route_prefix'     => env('BACKPACK_ROUTE_PREFIX', 'admin'),
-    'middleware_class' => ['web', 'admin'],
-    // другие опции по умолчанию
+    // Группа middleware для всех маршрутов Backpack
+//    'middleware_class' => [
+//        'web',
+//        'admin', // это алиас, см. ниже в 'middleware_key'
+//    ],
+    'middleware_class' => [
+        // все стандартные web-middleware:
+        //\App\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        //\App\Http\Middleware\VerifyCsrfToken::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \Backpack\CRUD\app\Http\Middleware\AuthenticateSession::class,
+
+        // ваше собственное – проверяет, что пользователь админ
+        \App\Http\Middleware\CheckIfAdmin::class,
+
+        // неплохо оставить и middleware для сессий Backpack:
+        \Backpack\CRUD\app\Http\Middleware\AuthenticateSession::class,
+    ],
 
     // The web middleware (group) used in all base & CRUD routes
     // If you've modified your "web" middleware group (ex: removed sessions), you can use a different
@@ -113,12 +133,12 @@ return [
 
     // The classes for the middleware to check if the visitor is an admin
     // Can be a single class or an array of classes
-    'middleware_class' => [
-        App\Http\Middleware\CheckIfAdmin::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \Backpack\CRUD\app\Http\Middleware\AuthenticateSession::class,
-        // \Backpack\CRUD\app\Http\Middleware\UseBackpackAuthGuardInsteadOfDefaultAuthGuard::class,
-    ],
+//    'middleware_class' => [
+//        App\Http\Middleware\CheckIfAdmin::class,
+//        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+//        \Backpack\CRUD\app\Http\Middleware\AuthenticateSession::class,
+//        // \Backpack\CRUD\app\Http\Middleware\UseBackpackAuthGuardInsteadOfDefaultAuthGuard::class,
+//    ],
 
     // Alias for that middleware
     'middleware_key' => 'admin',
